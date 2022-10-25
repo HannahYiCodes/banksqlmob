@@ -11,7 +11,7 @@ public class Bank {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String location;
+    private String location; // use address instead
     private String phoneNumber;
 
     public Bank(String name, String location, String phoneNumber) {
