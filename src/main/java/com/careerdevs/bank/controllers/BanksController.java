@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +31,7 @@ public class BanksController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<?> getAllBanksFromDB() {
             List<Bank> allBanks = bankRepository.findAll();
             return new ResponseEntity<>(allBanks, HttpStatus.OK);
@@ -45,5 +44,42 @@ public class BanksController {
                 return new ResponseEntity<>("Bank not found", HttpStatus.NOT_FOUND);
             }
             return new ResponseEntity<>(requestBank.get(), HttpStatus.OK);
+    }
+
+
+    @PostMapping("/{id}")
+    public ResponseEntity<?> postOneByID(@PathVariable Long id, Bank newBankData) {
+        Bank requestedBank = bankRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        // option 1
+//        return ResponseEntity.ok(bankRepository.save(newBankData)); // newBankData must contain ALL fields even if you aren't changing them
+
+        // option 2
+        if (!newBankData.getName().equals("")) {
+            requestedBank.setName(newBankData.getName());
+        }
+        if (!newBankData.getPhoneNumber().equals("")) {
+            requestedBank.setPhoneNumber(newBankData.getPhoneNumber());
+        }
+        return ResponseEntity.ok(bankRepository.save(requestedBank));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteOneById(@PathVariable Long id, Bank newBankData) {
+        Bank requestedBank = bankRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        bankRepository.deleteById(id);
+        return ResponseEntity.ok(requestedBank);
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<?> findOneBankByName(@PathVariable String name) {
+        Bank requestedBank = bankRepository.findByName(name).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
+        );
+        return new ResponseEntity<>(requestedBank, HttpStatus.OK);
+    }
+
+    @GetMapping("/areaCode/{areaCode}")
+    public ResponseEntity<?> findAllBanksByAreaCode(@PathVariable String areaCode) {
+        return new ResponseEntity<>(bankRepository.findAllAreaCodes(areaCode), HttpStatus.OK);
     }
 }
