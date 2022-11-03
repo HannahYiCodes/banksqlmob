@@ -2,11 +2,13 @@ package com.careerdevs.bank.controllers;
 
 import com.careerdevs.bank.models.Bank;
 import com.careerdevs.bank.models.Customer;
+import com.careerdevs.bank.repositories.BankRepository;
 import com.careerdevs.bank.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,11 +19,20 @@ public class CustomerController {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer newCustomer) {
-        Customer customer = customerRepository.save(newCustomer);
+    @Autowired
+    private BankRepository bankRepository;
 
-        return new ResponseEntity<>(customer, HttpStatus.CREATED);
+    @PostMapping("/{bankId}")
+    public ResponseEntity<Customer> createOneCustomer(@RequestBody Customer newCustomerData, @PathVariable Long bankId) {
+        // Find the bank by ID in the repository
+        // If bank doesn't exist return bad request
+        // If bank exist add to newCustomerData and save
+
+        Bank newBank = bankRepository.findById(bankId).orElseThrow(()-> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        newCustomerData.setBank(requestedBank);
+
+        Customer newCustomer = customerRepository.save(newCustomerData);
+        return new ResponseEntity<>(newCustomer, HttpStatus.CREATED);
     }
 
     @GetMapping("/allcustomers")
