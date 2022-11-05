@@ -46,6 +46,11 @@ public class BanksController {
             return new ResponseEntity<>(requestBank.get(), HttpStatus.OK);
     }
 
+    // Option 2:
+    // Optional<Bank> requestedBank = bankRepositoryFindById(id);
+    // if (requestedBank.isEmpty()) {return new ResponseEntity<>("Invalid ID", HttpStatus.NOT_FOUND);}
+    // Line below will not run if conditional above is true, break occurs after return above
+    // return new ResponseEntity<>(requestedBank.get(), HttpStatus.OK);
 
     @PostMapping("/{id}")
     public ResponseEntity<?> postOneByID(@PathVariable Long id, Bank newBankData) {
