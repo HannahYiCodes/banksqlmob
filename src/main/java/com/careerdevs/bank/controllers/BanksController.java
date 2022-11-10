@@ -34,11 +34,15 @@ public class BanksController {
     @GetMapping("/")
     public ResponseEntity<?> getAllBanksFromDB() {
             List<Bank> allBanks = bankRepository.findAll();
+            // other options
+            //return new ResponseEntity<>(allBanks, HttpStatus.OK);
+            //return ResponseEntity.ok(bankRepository.findAll());//200 - success
             return new ResponseEntity<>(allBanks, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getBankByID(@PathVariable Long id) {
+            //Bank requestedBank = bankRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)); - use it instead of try catch, autosends 404;
             Optional<Bank> requestBank = bankRepository.findById(id);
             if (requestBank.isEmpty()) {
                 return new ResponseEntity<>("Bank not found", HttpStatus.NOT_FOUND);
@@ -53,28 +57,32 @@ public class BanksController {
     // return new ResponseEntity<>(requestedBank.get(), HttpStatus.OK);
 
     @PostMapping("/{id}")
-    public ResponseEntity<?> postOneByID(@PathVariable Long id, Bank newBankData) {
+    public ResponseEntity<?> postOneBankByID(@PathVariable Long id, Bank newBankData) {
         Bank requestedBank = bankRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         // option 1
-//        return ResponseEntity.ok(bankRepository.save(newBankData)); // newBankData must contain ALL fields even if you aren't changing them
+//        return ResponseEntity.ok(bankRepository.save(newBankData));
+// newBankData must contain ALL fields even if you aren't changing them
 
         // option 2
-        if (!newBankData.getName().equals("")) {
+        // allows us to only change data provided to us
+        // validates data at the same time and only allow changes to data if we allow them
+        if (!newBankData.getName().equals("")) { // if key exists
             requestedBank.setName(newBankData.getName());
         }
-        if (!newBankData.getPhoneNumber().equals("")) {
+        if (newBankData.getPhoneNumber() != null && newBankData.getPhoneNumber().length()>=3) { // if key doesn't exist
             requestedBank.setPhoneNumber(newBankData.getPhoneNumber());
         }
         return ResponseEntity.ok(bankRepository.save(requestedBank));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteOneById(@PathVariable Long id, Bank newBankData) {
+    public ResponseEntity<?> deleteOneBankById(@PathVariable Long id) {
         Bank requestedBank = bankRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         bankRepository.deleteById(id);
         return ResponseEntity.ok(requestedBank);
     }
 
+    // custom query
     @GetMapping("/name/{name}")
     public ResponseEntity<?> findOneBankByName(@PathVariable String name) {
         Bank requestedBank = bankRepository.findByName(name).orElseThrow(
@@ -86,5 +94,11 @@ public class BanksController {
     @GetMapping("/areaCode/{areaCode}")
     public ResponseEntity<?> findAllBanksByAreaCode(@PathVariable String areaCode) {
         return new ResponseEntity<>(bankRepository.findAllAreaCodes(areaCode), HttpStatus.OK);
+    }
+
+    @GetMapping("/customer/{id}")
+    public ResponseEntity<?> findBankByCustomerId(@PathVariable Long id){
+        Bank foundBank = bankRepository.getByCustomers_id(id).orElseThrow(()-> new ResponseStatusException((HttpStatus.NOT_FOUND)));
+        return new ResponseEntity<>(foundBank, HttpStatus.OK);
     }
 }
