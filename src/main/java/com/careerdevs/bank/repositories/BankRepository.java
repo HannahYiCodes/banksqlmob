@@ -10,8 +10,8 @@ import java.util.Optional;
 public interface BankRepository extends JpaRepository <Bank, Long> {
     Optional<Bank> findByName(String name);
 
-    @Query ("SELECT * FROM bank WHERE phone_number LIKE \"?1%\";")
-        List<Bank> findAllAreaCodes(String areaCode);
+    @Query ("SELECT b FROM Bank b WHERE b.phoneNumber LIKE ?1%")
+    List<Bank> findAllAreaCodes(String areaCode);
 
     Optional<Bank> getByCustomers_id(Long id);
 }

@@ -7,7 +7,6 @@ import javax.persistence.*;
 @Entity
 public class Customer {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //jpa needs setters anyway
