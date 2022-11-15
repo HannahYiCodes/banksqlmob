@@ -1,5 +1,6 @@
 package com.careerdevs.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 import javax.persistence.*;
@@ -22,8 +23,12 @@ public class Customer {
     @JsonIncludeProperties("id")
     private Bank bank; //we need getters and setters for jpa
 
-    public Customer() {
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "username")
+    @JsonIncludeProperties("username")
+    private User user;
 
+    public Customer() {
     }
 
     public Customer(String firstName, String lastName, String email, Integer age, String location) { //data we expecting from the user
@@ -34,8 +39,15 @@ public class Customer {
         this.location = location;
     }
 
+    public User getUser() {
+        return user;
+    }
 
-//Getters
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    // getters
 
     public Bank getBank() {
         return bank;
@@ -67,7 +79,7 @@ public class Customer {
     }
 
 
-    //setters
+    // setters
 
     public void setId(Long id) {
         this.id = id;
