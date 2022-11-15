@@ -44,4 +44,12 @@ public class User {
     public void setLoginToken(String loginToken) {
         this.loginToken = loginToken;
     }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }
