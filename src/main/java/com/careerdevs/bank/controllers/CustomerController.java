@@ -2,6 +2,7 @@ package com.careerdevs.bank.controllers;
 
 import com.careerdevs.bank.models.Bank;
 import com.careerdevs.bank.models.Customer;
+import com.careerdevs.bank.models.User;
 import com.careerdevs.bank.repositories.BankRepository;
 import com.careerdevs.bank.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,13 @@ public class CustomerController {
     }
 
 
+//    @GetMapping ("/{id}")
+//    public ResponseEntity<?> getCustomerById(@PathVariable Long id) {
+//        Optional<Customer> foundCustomer = customerRepository.findById(id);
+//
+//        return new ResponseEntity<>(foundCustomer, HttpStatus.OK);
+//    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Long id) {
         Customer requestedCustomer = customerRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -91,5 +99,33 @@ public class CustomerController {
         List<Customer> allCustomers = customerRepository.findAllByBank_id(bankId);
         return  new ResponseEntity<>(allCustomers, HttpStatus.OK);
     }
+
+//    @PostMapping("/{custId}/token/{loginToken}")
+//    public ResponseEntity<?> addUserToCustomer(@PathVariable Long custId, @PathVariable String loginToken) {
+//        // accept login token
+//        // find user by login token
+//        // find customer by id
+//        // attach found user to found customer
+//        User foundUser = userRepository.findByLoginToken(loginToken).orElseThrow(
+//                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
+//        );
+//        Customer foundCustomer = customerRepository.findById(custId).orElseThrow(
+//                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
+//        );
+//        foundCustomer.setUser(foundUser);
+//        customerRepository.save(foundCustomer);
+//        return new ResponseEntity<>(foundCustomer, HttpStatus.OK);
+//    }
+
+//    @GetMapping("/self/{loginToken}")
+//    public ResponseEntity<?> getSelfByLoginToken(@PathVariable String loginToken) {
+//        User foundUser = userRepository.findByLoginToken(loginToken).orElseThrow(
+//                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
+//        );
+//        Customer foundCustomer = customerRepository.findByUser_username(foundUser.getUsername()).orElseThrow(
+//                () -> new ResponseStatusException(HttpStatus.NOT_FOUND)
+//        );
+//        return new ResponseEntity<>(foundCustomer, HttpStatus.OK);
+//    }
     }
 

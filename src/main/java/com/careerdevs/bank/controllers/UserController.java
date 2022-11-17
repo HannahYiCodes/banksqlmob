@@ -39,19 +39,21 @@ public class UserController {
 //        return new ResponseEntity<>(foundUser, HttpStatus.OK);
 //    }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User authUser) {
         // Find the user
         // Compare password provided with password of user account
-        // Create random token and save record
+        // Create random token & save to user record
         // Return login token
 
         Optional<User> foundUser = userRepository.findById(authUser.getUsername());
         if (!authUser.getPassword().equals(foundUser.get().getPassword())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        int randomNum = ThreadLocalRandom.current().nextInt();
-        authUser.setLoginToken(Integer.toString(randomNum));
+//        Random randomNum = new Random();
+        int randomNum = ThreadLocalRandom.current().nextInt();  // 2 users could have same token, one possibility to avoid this is use current day/time     OR
+        // concatenate username to end of generated String
+        authUser.setLoginToken(Integer.toString(randomNum) + foundUser.get().getUsername());
         userRepository.save(authUser);
         return new ResponseEntity<>(authUser.getLoginToken(), HttpStatus.OK);
     }

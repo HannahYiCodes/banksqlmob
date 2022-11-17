@@ -9,8 +9,9 @@ public class User {
     private String password;
     private String loginToken;
 
-    @OneToOne(mappedBy = "user")
-    private Customer customer;
+    // Typically this should only be a one directional relationship, you would not want to get user data by customer id
+//    @OneToOne(mappedBy = "user")
+//    private Customer customer;
 
     public User(String username, String password, String loginToken) {
         this.username = username;
@@ -45,11 +46,4 @@ public class User {
         this.loginToken = loginToken;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
 }
