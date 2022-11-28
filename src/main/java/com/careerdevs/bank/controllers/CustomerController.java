@@ -23,7 +23,7 @@ public class CustomerController {
     @Autowired
     BankRepository bankRepository;
 
-    @PostMapping("/{bankId}")
+    @PostMapping("/{bankId}/{loginToken}")
     public ResponseEntity<?> createCustomer(@RequestBody Customer newCustomerData, @PathVariable Long bankId) {
         // Find the bank by ID in the repository
         // If bank doesn't exist return bad request

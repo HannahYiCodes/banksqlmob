@@ -41,6 +41,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User authUser) {
+        // TODO:
         // Find the user
         // Compare password provided with password of user account
         // Create random token & save to user record
