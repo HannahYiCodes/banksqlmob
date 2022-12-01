@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+// TODO: REDO ALL VIDEOS :D
 @CrossOrigin
 @RestController
 @RequestMapping
